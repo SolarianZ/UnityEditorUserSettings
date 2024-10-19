@@ -1,0 +1,25 @@
+{
+  "name": "com.greenbamboogames.editorusersettings",
+  "version": "1.0.0-preview",
+  "displayName": "Editor User Settings!",
+  "description": "Store user settings in Unity Editor.",
+  "unity": "2022.3",
+  "documentationUrl": "https://github.com/SolarianZ/EditorUserSettings",
+  "changelogUrl": "https://github.com/SolarianZ/EditorUserSettings/releases",
+  "licensesUrl": "https://github.com/SolarianZ/EditorUserSettings/blob/main/LICENSE",
+  "keywords": [
+    "Editor",
+    "User",
+    "Settings",
+    "Prefs",
+    "Temp",
+    "Config"
+  ],
+  "author": {
+    "name": "ZQY",
+    "email": "vdergow@hotmail.com",
+    "url": "https://github.com/SolarianZ"
+  },
+  "type": "tool",
+  "hideInEditor": false
+}
