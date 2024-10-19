@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GBG.EditorUserSettings.Editor
 {
-    public static class EditorUserSettings
+    public static class CustomEditorUserSettings
     {
         [MenuItem("Tools/Bamboo/Editor User Settings/Inspect Storage Object for Project")]
         internal static void InspectProjectStorageObject()
@@ -81,6 +81,12 @@ namespace GBG.EditorUserSettings.Editor
 
         public static void Set<T>(string key, T value, bool isSharedAcrossProjects = false)
         {
+            if (value is Object obj)
+            {
+                Debug.LogError($"[Editor User Settings] Cannot serialize object '{obj}' that derive from UnityEngine.Object.", obj);
+                return;
+            }
+
             IEditorUserSettingsStorage storage = GetStorage(isSharedAcrossProjects);
             storage.Set(key, value);
             storage.TryDestroy(isSharedAcrossProjects);
