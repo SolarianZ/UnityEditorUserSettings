@@ -2,7 +2,7 @@
 {
     internal interface IEditorUserSettingsStorage
     {
-        int BatchingCounter { get; }
+        uint BatchingCounter { get; }
 
         Batching StartBatching();
         void EndBatching();

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace GBG.EditorUserSettings.Editor
 {
     [Serializable]
-    public class KeyValuePair
+    internal class KeyValuePair
     {
         public string Key;
         [SerializeReference]
@@ -42,6 +42,11 @@ namespace GBG.EditorUserSettings.Editor
 
         public object GetValue(Type type)
         {
+            if (string.IsNullOrEmpty(ValueString))
+            {
+                return default;
+            }
+
             return Convert.ChangeType(ValueString, type);
         }
 
@@ -126,34 +131,65 @@ namespace GBG.EditorUserSettings.Editor
             }
         }
 
-        public Dictionary<Type, Dictionary<string, object>> CreateCacheDict()
+        public Dictionary<Type, Dictionary<string, object>> CreateCacheDict(string exceptionDesctiption,
+            out AggregateException aggregateException)
         {
+            List<Exception> exceptions = null;
+
             int capcity = GeneralLists.Count + PrimitiveLists.Count;
             Dictionary<Type, Dictionary<string, object>> cacheDict = new Dictionary<Type, Dictionary<string, object>>(capcity);
 
             foreach (GeneralList generalList in GeneralLists)
             {
-                Type type = Type.GetType(generalList.TypeAssemblyQualifiedName);
-                Dictionary<string, object> objDict = new Dictionary<string, object>(generalList.List.Count);
-                cacheDict.Add(type, objDict);
-
-                foreach (KeyValuePair kv in generalList.List)
+                try
                 {
-                    objDict.Add(kv.Key, kv.Value);
+                    Type type = Type.GetType(generalList.TypeAssemblyQualifiedName);
+                    Dictionary<string, object> objDict = new Dictionary<string, object>(generalList.List.Count);
+                    cacheDict.Add(type, objDict);
+
+                    foreach (KeyValuePair kv in generalList.List)
+                    {
+                        objDict.Add(kv.Key, kv.Value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    exceptions ??= new List<Exception>();
+                    exceptions.Add(ex);
                 }
             }
 
             foreach (PrimitiveList primitiveList in PrimitiveLists)
             {
-                Type type = Type.GetType(primitiveList.TypeAssemblyQualifiedName);
-                Dictionary<string, object> objDict = new Dictionary<string, object>(primitiveList.List.Count);
-                cacheDict.Add(type, objDict);
-
-                foreach (KeyValueStringPair kv in primitiveList.List)
+                try
                 {
-                    objDict.Add(kv.Key, kv.GetValue(type));
+                    Type type = Type.GetType(primitiveList.TypeAssemblyQualifiedName);
+                    Dictionary<string, object> objDict = new Dictionary<string, object>(primitiveList.List.Count);
+                    cacheDict.Add(type, objDict);
+
+                    foreach (KeyValueStringPair kv in primitiveList.List)
+                    {
+                        try
+                        {
+                            objDict.Add(kv.Key, kv.GetValue(type));
+                        }
+                        catch (Exception ex)
+                        {
+                            exceptions ??= new List<Exception>();
+                            exceptions.Add(ex);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    exceptions ??= new List<Exception>();
+                    exceptions.Add(ex);
                 }
             }
+
+            aggregateException = exceptions != null
+                ? new AggregateException(exceptionDesctiption, exceptions)
+                : null;
 
             return cacheDict;
         }

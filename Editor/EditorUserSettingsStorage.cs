@@ -29,7 +29,7 @@ namespace GBG.EditorUserSettings.Editor
         //    }
         //}
 
-        public int BatchingCounter { get; private set; }
+        public uint BatchingCounter { get; private set; }
 
 
         public bool Has<T>(string key)
@@ -147,6 +147,18 @@ namespace GBG.EditorUserSettings.Editor
             base.Save(saveAsText);
         }
 
+        public void Destroy()
+        {
+            if (Application.isPlaying)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                DestroyImmediate(this);
+            }
+        }
+
 
         #region ISerializationCallbackReceiver
 
@@ -157,7 +169,12 @@ namespace GBG.EditorUserSettings.Editor
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
-            _cacheDict = _storageObject.CreateCacheDict();
+            _cacheDict = _storageObject.CreateCacheDict("Exceptions occurred while deserializing the EditorUserSettings. Please see InnerExceptions.",
+                out AggregateException aggregateException);
+            if (aggregateException != null)
+            {
+                throw aggregateException;
+            }
         }
 
         #endregion
