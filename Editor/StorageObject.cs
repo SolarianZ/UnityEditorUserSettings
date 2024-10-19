@@ -63,9 +63,9 @@ namespace GBG.EditorUserSettings.Editor
         public string TypeAssemblyQualifiedName;
         public List<KeyValuePair> List;
 
-        public GeneralList(string typeFullName, int capcity)
+        public GeneralList(string typeAssemblyQualifiedName, int capcity)
         {
-            TypeAssemblyQualifiedName = typeFullName;
+            TypeAssemblyQualifiedName = typeAssemblyQualifiedName;
             List = new List<KeyValuePair>(capcity);
         }
     }
@@ -76,9 +76,9 @@ namespace GBG.EditorUserSettings.Editor
         public string TypeAssemblyQualifiedName;
         public List<KeyValueStringPair> List;
 
-        public PrimitiveList(string typeFullName, int capcity)
+        public PrimitiveList(string typeAssemblyQualifiedName, int capcity)
         {
-            TypeAssemblyQualifiedName = typeFullName;
+            TypeAssemblyQualifiedName = typeAssemblyQualifiedName;
             List = new List<KeyValueStringPair>(capcity);
         }
     }
@@ -90,7 +90,7 @@ namespace GBG.EditorUserSettings.Editor
         [SerializeField]
         public List<GeneralList> GeneralLists = new List<GeneralList>();
 
-        // For string and primitive types : <TypeFullName, <Key - ValueString>[]>[]
+        // For string and primitive types : <TypeAssemblyQualifiedName, <Key - ValueString>[]>[]
         [SerializeField]
         public List<PrimitiveList> PrimitiveLists = new List<PrimitiveList>();
 
@@ -105,7 +105,7 @@ namespace GBG.EditorUserSettings.Editor
                 Type type = typeKvDict.Key;
                 if (type.IsPrimitive || type == typeof(string))
                 {
-                    PrimitiveList typedKeyValueStringPairRegistry = new PrimitiveList(type.FullName, typeKvDict.Value.Count);
+                    PrimitiveList typedKeyValueStringPairRegistry = new PrimitiveList(type.AssemblyQualifiedName, typeKvDict.Value.Count);
                     PrimitiveLists.Add(typedKeyValueStringPairRegistry);
 
                     foreach (KeyValuePair<string, object> kv in typeKvDict.Value)
@@ -115,7 +115,7 @@ namespace GBG.EditorUserSettings.Editor
                 }
                 else
                 {
-                    GeneralList typedObjectRegistry = new GeneralList(type.FullName, typeKvDict.Value.Count);
+                    GeneralList typedObjectRegistry = new GeneralList(type.AssemblyQualifiedName, typeKvDict.Value.Count);
                     GeneralLists.Add(typedObjectRegistry);
 
                     foreach (KeyValuePair<string, object> kv in typeKvDict.Value)

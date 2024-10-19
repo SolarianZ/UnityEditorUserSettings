@@ -2,24 +2,32 @@
 {
     public static class EditorUserSettings
     {
-        public static bool Has<T>(string key)
+        private static EditorUserSettingsStorage GetStorage(bool isSharedAcrossProjects)
         {
-            return EditorUserSettingsProjectStorage.instance.Has<T>(key);
+            return isSharedAcrossProjects
+                ? EditorUserSettingsUserStorage.instance
+                : EditorUserSettingsProjectStorage.instance;
         }
 
-        public static T Get<T>(string key, T defaultValue)
+
+        public static bool Has<T>(string key, bool isSharedAcrossProjects = false)
         {
-            return EditorUserSettingsProjectStorage.instance.Get<T>(key, defaultValue);
+            return GetStorage(isSharedAcrossProjects).Has<T>(key);
         }
 
-        public static bool TryGet<T>(string key, out T value)
+        public static T Get<T>(string key, T defaultValue, bool isSharedAcrossProjects = false)
         {
-            return EditorUserSettingsProjectStorage.instance.TryGet<T>(key, out value);
+            return GetStorage(isSharedAcrossProjects).Get<T>(key, defaultValue);
         }
 
-        public static void Set<T>(string key, T value)
+        public static bool TryGet<T>(string key, out T value, bool isSharedAcrossProjects = false)
         {
-            EditorUserSettingsProjectStorage.instance.Set(key, value);
+            return GetStorage(isSharedAcrossProjects).TryGet<T>(key, out value);
+        }
+
+        public static void Set<T>(string key, T value, bool isSharedAcrossProjects = false)
+        {
+            GetStorage(isSharedAcrossProjects).Set(key, value);
         }
     }
 }
