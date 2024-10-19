@@ -5,12 +5,17 @@ using UnityEngine;
 
 namespace GBG.EditorUserSettings.Editor
 {
-    internal class EditorUserSettingsStorage :
-        ScriptableSingleton<EditorUserSettingsStorage>,
+    internal abstract class EditorUserSettingsStorage<TStorage> :
+        ScriptableSingleton<TStorage>,
         IEditorUserSettingsStorage,
         ISerializationCallbackReceiver
+        where TStorage : EditorUserSettingsStorage<TStorage>
     {
-        public const string RelativePath = "UserSettings/EditorUserSettingsStorage.asset";
+        public const string RelativePath = "UserSettings/CustomEditorUserSettingsStorage.asset";
+
+        // For debug
+        [SerializeField]
+        protected string TypeName;
 
         // For reference types and serializable value types
         [SerializeField]
@@ -145,6 +150,13 @@ namespace GBG.EditorUserSettings.Editor
             }
 
             base.Save(saveAsText);
+        }
+
+
+        public void ShowInFolder()
+        {
+            string path = GetFilePath();
+            EditorUtility.RevealInFinder(path);
         }
 
         public void Destroy()
