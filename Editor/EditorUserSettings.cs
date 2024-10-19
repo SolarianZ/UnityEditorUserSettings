@@ -39,8 +39,8 @@ namespace GBG.EditorUserSettings.Editor
         private static IEditorUserSettingsStorage GetStorage(bool isSharedAcrossProjects)
         {
             return isSharedAcrossProjects
-                ? EditorUserSettingsSharedStorage.instance
-                : EditorUserSettingsProjectStorage.instance;
+                ? (IEditorUserSettingsStorage)EditorUserSettingsSharedStorage.instance
+                : (IEditorUserSettingsStorage)EditorUserSettingsProjectStorage.instance;
         }
 
         private static void TryDestroy(this IEditorUserSettingsStorage storage, bool isSharedAcrossProjects)

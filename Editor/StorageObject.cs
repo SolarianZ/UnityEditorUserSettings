@@ -154,7 +154,7 @@ namespace GBG.EditorUserSettings.Editor
                 }
                 catch (Exception ex)
                 {
-                    exceptions ??= new List<Exception>();
+                    exceptions = exceptions ?? new List<Exception>();
                     exceptions.Add(ex);
                 }
             }
@@ -175,14 +175,14 @@ namespace GBG.EditorUserSettings.Editor
                         }
                         catch (Exception ex)
                         {
-                            exceptions ??= new List<Exception>();
+                            exceptions = exceptions ?? new List<Exception>();
                             exceptions.Add(ex);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    exceptions ??= new List<Exception>();
+                    exceptions = exceptions ?? new List<Exception>();
                     exceptions.Add(ex);
                 }
             }
