@@ -27,6 +27,17 @@ namespace GBG.EditorUserSettings.Editor
 
         private void OnEnable()
         {
+            Debug.Log(EditorUserSettings.Get("key_string", "ERROR"));
+            Debug.Log(EditorUserSettings.Get("key_int", int.MinValue));
+            Debug.Log(EditorUserSettings.Get("key_bool", false));
+            Debug.Log(EditorUserSettings.Get("key_vector3", Vector3.zero));
+            Debug.Log(EditorUserSettings.Get("key_system.vector3", System.Numerics.Vector3.Zero));
+            Debug.Log(EditorUserSettings.Get<MyClassSerializable>("key_MyClassSerializable", null));
+            Debug.Log(EditorUserSettings.Get<MyClassNonSerializable>("key_MyClassNonSerializable", null));
+        }
+
+        private void OnDisable()
+        {
             EditorUserSettings.Set("key_string", DateTime.Now.ToString());
             EditorUserSettings.Set("key_int", 123);
             EditorUserSettings.Set("key_bool", true);
@@ -34,12 +45,6 @@ namespace GBG.EditorUserSettings.Editor
             EditorUserSettings.Set("key_system.vector3", System.Numerics.Vector3.One);
             EditorUserSettings.Set("key_MyClassSerializable", new MyClassSerializable());
             EditorUserSettings.Set("key_MyClassNonSerializable", new MyClassNonSerializable());
-        }
-
-        private void OnDisable()
-        {
-            string dt = EditorUserSettingsProjectStorage.instance.Get("test", "ERROR");
-            Debug.Log(dt);
         }
 
         #region IHasCustomMenu

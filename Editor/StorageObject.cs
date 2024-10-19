@@ -29,17 +29,43 @@ namespace GBG.EditorUserSettings.Editor
             Key = key;
             ValueString = stringOrPrimitive?.ToString();
         }
+
+        public TValue GetValue<TValue>()
+        {
+            if (string.IsNullOrEmpty(ValueString))
+            {
+                return default;
+            }
+
+            return (TValue)Convert.ChangeType(ValueString, typeof(TValue));
+        }
+
+        public object GetValue(Type type)
+        {
+            return Convert.ChangeType(ValueString, type);
+        }
+
+        public object GetValue(string typeAssemblyQualifiedName)
+        {
+            if (string.IsNullOrEmpty(ValueString))
+            {
+                return default;
+            }
+
+            Type type = Type.GetType(typeAssemblyQualifiedName);
+            return GetValue(type);
+        }
     }
 
     [Serializable]
     internal class GeneralList
     {
-        public string TypeFullName;
+        public string TypeAssemblyQualifiedName;
         public List<KeyValuePair> List;
 
         public GeneralList(string typeFullName, int capcity)
         {
-            TypeFullName = typeFullName;
+            TypeAssemblyQualifiedName = typeFullName;
             List = new List<KeyValuePair>(capcity);
         }
     }
@@ -47,12 +73,12 @@ namespace GBG.EditorUserSettings.Editor
     [Serializable]
     internal class PrimitiveList
     {
-        public string TypeFullName;
+        public string TypeAssemblyQualifiedName;
         public List<KeyValueStringPair> List;
 
         public PrimitiveList(string typeFullName, int capcity)
         {
-            TypeFullName = typeFullName;
+            TypeAssemblyQualifiedName = typeFullName;
             List = new List<KeyValueStringPair>(capcity);
         }
     }
@@ -99,27 +125,37 @@ namespace GBG.EditorUserSettings.Editor
                 }
             }
         }
-        
-        public Dictionary<string, GeneralList> GetGeneralListDict()
+
+        public Dictionary<Type, Dictionary<string, object>> CreateCacheDict()
         {
-            Dictionary<string, GeneralList> dict = new Dictionary<string, GeneralList>(GeneralLists.Count);
-            foreach (GeneralList list in GeneralLists)
+            int capcity = GeneralLists.Count + PrimitiveLists.Count;
+            Dictionary<Type, Dictionary<string, object>> cacheDict = new Dictionary<Type, Dictionary<string, object>>(capcity);
+
+            foreach (GeneralList generalList in GeneralLists)
             {
-                dict.Add(list.TypeFullName, list);
+                Type type = Type.GetType(generalList.TypeAssemblyQualifiedName);
+                Dictionary<string, object> objDict = new Dictionary<string, object>(generalList.List.Count);
+                cacheDict.Add(type, objDict);
+
+                foreach (KeyValuePair kv in generalList.List)
+                {
+                    objDict.Add(kv.Key, kv.Value);
+                }
             }
 
-            return dict;
-        }
-
-        public Dictionary<string, PrimitiveList> GetPrimitiveListDict()
-        {
-            Dictionary<string, PrimitiveList> dict = new Dictionary<string, PrimitiveList>(PrimitiveLists.Count);
-            foreach (PrimitiveList list in PrimitiveLists)
+            foreach (PrimitiveList primitiveList in PrimitiveLists)
             {
-                dict.Add(list.TypeFullName, list);
+                Type type = Type.GetType(primitiveList.TypeAssemblyQualifiedName);
+                Dictionary<string, object> objDict = new Dictionary<string, object>(primitiveList.List.Count);
+                cacheDict.Add(type, objDict);
+
+                foreach (KeyValueStringPair kv in primitiveList.List)
+                {
+                    objDict.Add(kv.Key, kv.GetValue(type));
+                }
             }
 
-            return dict;
+            return cacheDict;
         }
     }
 }
