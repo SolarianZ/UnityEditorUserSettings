@@ -4,7 +4,7 @@
     {
         uint BatchingCounter { get; }
 
-        Batching StartBatching();
+        BatchingScope StartBatching();
         void EndBatching();
 
 

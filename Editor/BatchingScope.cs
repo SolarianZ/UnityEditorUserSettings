@@ -3,11 +3,11 @@ using UnityEngine.Assertions;
 
 namespace GBG.EditorUserSettings.Editor
 {
-    public struct Batching : IDisposable
+    public struct BatchingScope : IDisposable
     {
         private IEditorUserSettingsStorage _storage;
 
-        internal Batching(IEditorUserSettingsStorage storage)
+        internal BatchingScope(IEditorUserSettingsStorage storage)
         {
             _storage = storage;
             Assert.IsTrue(_storage.BatchingCounter > 0);

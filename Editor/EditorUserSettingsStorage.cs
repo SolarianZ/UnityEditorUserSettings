@@ -121,10 +121,10 @@ namespace GBG.EditorUserSettings.Editor
         }
 
 
-        public Batching StartBatching()
+        public BatchingScope StartBatching()
         {
             BatchingCounter++;
-            return new Batching(this);
+            return new BatchingScope(this);
         }
 
         public void EndBatching()

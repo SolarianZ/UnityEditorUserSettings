@@ -45,7 +45,7 @@ namespace GBG.EditorUserSettings.Editor
 
         private static void TryDestroy(this IEditorUserSettingsStorage storage, bool isSharedAcrossProjects)
         {
-            if (isSharedAcrossProjects && storage.BatchingCounter == 0)
+            if (isSharedAcrossProjects && storage != null && storage.BatchingCounter == 0)
             {
                 storage.Destroy();
             }
@@ -163,6 +163,33 @@ namespace GBG.EditorUserSettings.Editor
         {
             IEditorUserSettingsStorage storage = GetStorage(isSharedAcrossProjects);
             storage.Clear();
+            storage.TryDestroy(isSharedAcrossProjects);
+        }
+
+
+        /// <summary>
+        /// 开始批量编辑模式。
+        /// 批量编辑模式下，修改配置时不会立即将配置写入文件，而是等到批量编辑模式结束时才写入。
+        /// </summary>
+        /// <param name="isSharedAcrossProjects">配置是否在项目间共享。若为true，则在<see cref="UnityEditorInternal.InternalEditorUtility.unityPreferencesFolder"/>/UserSettings文件夹中查找；否则在项目<see cref="Application.dataPath"/>/../UserSettings文件夹下查找。</param>
+        /// <returns>批处理区域对象。可配合using语句块使用。</returns>
+        public static BatchingScope StartBatching(bool isSharedAcrossProjects = false)
+        {
+            IEditorUserSettingsStorage storage = GetStorage(isSharedAcrossProjects);
+            BatchingScope scope = storage.StartBatching();
+            storage.TryDestroy(isSharedAcrossProjects);
+
+            return scope;
+        }
+
+        /// <summary>
+        /// 结束批量编辑模式。
+        /// </summary>
+        /// <param name="isSharedAcrossProjects">配置是否在项目间共享。若为true，则在<see cref="UnityEditorInternal.InternalEditorUtility.unityPreferencesFolder"/>/UserSettings文件夹中查找；否则在项目<see cref="Application.dataPath"/>/../UserSettings文件夹下查找。</param>
+        public static void EndBatching(bool isSharedAcrossProjects = false)
+        {
+            IEditorUserSettingsStorage storage = GetStorage(isSharedAcrossProjects);
+            storage.EndBatching();
             storage.TryDestroy(isSharedAcrossProjects);
         }
     }
