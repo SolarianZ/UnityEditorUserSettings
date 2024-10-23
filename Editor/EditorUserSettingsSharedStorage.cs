@@ -6,11 +6,6 @@ namespace GBG.EditorUserSettings.Editor
     [FilePath(RelativePath, FilePathAttribute.Location.PreferencesFolder)]
     internal class EditorUserSettingsSharedStorage : EditorUserSettingsStorage<EditorUserSettingsSharedStorage>
     {
-        public EditorUserSettingsSharedStorage()
-        {
-            TypeName = typeof(EditorUserSettingsSharedStorage).Name;
-        }
-
         protected override void Save(bool saveAsText)
         {
             base.Save(saveAsText);

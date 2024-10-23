@@ -39,6 +39,11 @@ static class CustomEditorUserSettings
 }
 ```
 
+- 当 `isSharedAcrossProjects` 为 `false` 时，数据只供当前项目使用。<br/>When `isSharedAcrossProjects` is `false`, the settings is only for the current project.
+  - 默认情况下，数据会保存在 `${Application.dataPath}/../UserSettings/CustomEditorUserSettingsStorage.asset` 中。<br/>By default settings will be saved in `${Application.dataPath}/../UserSettings/CustomEditorUserSettingsStorage.asset`.
+  - 如果项目中定义了 `GBG_EDITOR_USER_SETTINGS_USE_LIBRARY` 预编译指令，则数据会保存在 `${Application.dataPath}/../Library/UserSettings/CustomEditorUserSettingsStorage.asset` 中。<br/>If the `GBG_EDITOR_USER_SETTINGS_USE_LIBRARY` preprocessor directive is defined in the project, the settings will be saved in `${Application.dataPath}/../Library/UserSettings/CustomEditorUserSettingsStorage.asset`.
+- 当 `isSharedAcrossProjects` 为 `true` 时，数据可以跨项目共享，会保存在 `${InternalEditorUtility.unityPreferencesFolder}/UserSettings/CustomEditorUserSettingsStorage.asset` 中。<br/>When `isSharedAcrossProjects` is `true`, the settings can be shared across projects, and will be saved in `${InternalEditorUtility.unityPreferencesFolder}/UserSettings/CustomEditorUserSettingsStorage.asset`.
+
 
 ### 菜单项<br/>Menu Items
 

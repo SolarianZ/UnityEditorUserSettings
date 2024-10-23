@@ -13,10 +13,6 @@ namespace GBG.EditorUserSettings.Editor
     {
         public const string RelativePath = "UserSettings/CustomEditorUserSettingsStorage.asset";
 
-        // For debug
-        [SerializeField]
-        protected string TypeName;
-
         // For reference types and serializable value types
         [SerializeField]
         private StorageObject _storageObject = new StorageObject();
