@@ -58,3 +58,4 @@ static class CustomEditorUserSettings
 
 1. 读写跨项目配置数据时，没有添加文件锁机制，同时读写时，可能会导致数据丢失。<br/>When reading and writing data across projects, there is no file lock mechanism added, and data may be lost when reading and writing at the same time.
 2. 读写跨项目配置数据时，低版本Unity可能无法读取某些高版本Unity存储的数据。<br/> When reading and writing data across projects, lower versions of Unity may not be able to read some data stored by higher versions of Unity.
+3. 不能存储继承自 `UnityEngine.Object` 的数据（若需要，可以存储guid、路径或 `GlobalObjectId` ）。<br/>Cannot store data inherited from `UnityEngine.Object` (if needed, you can store guid, path or `GlobalObjectId` )。
